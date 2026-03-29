@@ -1,0 +1,13 @@
+*
+!*/
+
+# Allowlist
+!.git/*
+!.gitignore
+!.gitattributes
+
+!*.json
+
+
+# IgnoreList
+.obsidian*/workspace*.json
