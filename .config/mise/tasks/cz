@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# MISE: Run interactive commit helper (commitizen) using _amu deps
+set -euo pipefail
+
+repo_root="$(pwd -P)"
+echo "[mise task] cz (repo_root=$repo_root)"
+
+# run from .config so commitizen finds .czrc there
+cd .config
+
+# resolve commitizen CLI installed under _amu and execute it from here
+cz_path=$(node -e "console.log(require.resolve('commitizen/bin/git-cz', { paths: ['$repo_root/_amu'] }))")
+
+if [ -z "$cz_path" ]; then
+  echo "commitizen CLI not found in _amu; run pnpm install in _amu" >&2
+  exit 2
+fi
+
+if [ $# -gt 0 ]; then
+  exec node "$cz_path" --hook "$1"
+else
+  exec node "$cz_path"
+fi
