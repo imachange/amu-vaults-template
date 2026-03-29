@@ -1,8 +1,17 @@
-[hooks]
-  [hooks.pre-commit]
-  command = "mise run pre-commit"
-  run_in_parallel = false
+# pre-commit: ステージされた変更に対する短いチェック（mise pre-commit を呼ぶ）
+[pre-commit]
 
-  [hooks.pre-push]
-  command = "mise run pre-push"
-  run_in_parallel = false
+[pre-commit.commands.mise]
+run = "mise run pre-commit"
+
+# pre-push: push 前の統合チェック（mise pre-push を呼ぶ）
+[pre-push]
+
+[pre-push.commands.mise]
+run = "mise run pre-push"
+
+# commit-msg: コミットメッセージ検証（commitlint のカスタムルールで issue の有無を検証）
+[commit-msg]
+
+[commit-msg.commands.commitlint]
+run = 'pnpm --prefix _amu exec commitlint --config ../.config/commitlint.config.js --edit {1}'

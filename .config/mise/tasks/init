@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="リポジトリ初期化: 依存関係のインストールと Lefthook のセットアップ"
+#MISE alias="init"
+#MISE sources=["package.json","_amu/package.json"]
+#MISE tools={pnpm="latest",lefthook="1.13.6"}
+set -euo pipefail
+
+if [ -f "_amu/package.json" ]; then
+  echo "[mise task] init: pnpm install (_amu)"
+  pnpm --prefix _amu install
+fi
+
+echo "[mise task] init: lefthook install"
+lefthook install
+
+echo "[mise task] init: 完了"

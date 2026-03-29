@@ -6,8 +6,16 @@
 !.gitignore
 !.gitattributes
 
+!*.md
+
+!*.sh
+!*.js
+!*.ts
 !*.json
-!.config/*.toml
+!*.toml
+!*.yaml
+!*.config/mise/tasks/*
 
 # IgnoreList
 .obsidian*/workspace*.json
+node_modules/

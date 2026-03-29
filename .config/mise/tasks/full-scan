@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="リポジトリ全体のセキュリティスキャン（gitleaks）"
+#MISE alias="full-scan"
+#MISE sources=[".config/gitleaks.toml","**/*"]
+#MISE tools={gitleaks="latest"}
+set -euo pipefail
+
+echo "[mise task] full-scan"
+gitleaks detect --source . --config .config/gitleaks.toml --verbose

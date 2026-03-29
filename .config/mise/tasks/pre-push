@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#MISE description="push 前の統合的な検査（短い CI 相当のチェック）"
+#MISE alias="pre-push"
+#MISE sources=[".config/gitleaks.toml","**/*"]
+#MISE tools={gitleaks="latest"}
+set -euo pipefail
+
+echo "[mise task] pre-push (staged)"
+# If gitleaks supports --staged, use it. Otherwise scan staged files individually.
+if gitleaks detect --help 2>&1 | grep -q -- '--staged'; then
+	gitleaks detect --source . --config .config/gitleaks.toml --staged --verbose
+else
+	staged_files="$(git diff --name-only --cached --diff-filter=ACMR || true)"
+	if [ -z "$staged_files" ]; then
+		echo "[mise task] pre-push: no staged files"
+		exit 0
+	fi
+	exit_code=0
+	# Scan by directory (gitleaks expects a directory as --source)
+	dirs=$(printf "%s
+" "$staged_files" | while IFS= read -r f; do dirname "$f"; done | sort -u)
+	while IFS= read -r d; do
+		[ -z "$d" ] && continue
+		if [ -d "$d" ]; then
+			echo "[mise task] pre-push: scanning staged directory $d"
+			if ! gitleaks detect --source "$d" --config .config/gitleaks.toml --verbose; then
+				exit_code=1
+			fi
+		fi
+	done <<EOF
+$dirs
+EOF
+	if [ $exit_code -ne 0 ]; then
+		exit $exit_code
+	fi
+fi

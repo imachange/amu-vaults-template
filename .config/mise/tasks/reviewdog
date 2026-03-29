@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#MISE description="gitleaks の結果を reviewdog で PR に投稿する（CI 用）"
+#MISE alias="reviewdog"
+#MISE sources=[".config/gitleaks.toml","**/*"]
+#MISE tools={gitleaks="latest",reviewdog="latest"}
+set -euo pipefail
+
+if ! command -v reviewdog >/dev/null 2>&1; then
+  echo "[reviewdog task] reviewdog が見つかりません。インストールしてください。" >&2
+  exit 1
+fi
+
+# gitleaks は JSON レポート出力を指定し、reviewdog が読み取ります
+# reviewdog の実行には GITHUB_TOKEN が必要です。
+if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+  echo "[reviewdog task] GITHUB_TOKEN が設定されていません。CI環境で実行してください。" >&2
+  exit 1
+fi
+
+# gitleaksの実行（この出力をreviewdogでパース）
+# 直接 reviewdog の gitleaks フォーマットを利用
+
+gitleaks detect --source . --config .config/gitleaks.toml --report-format json --redact --verbose | reviewdog -f=gitleaks -name=gitleaks -reporter=github-pr-review -filter-mode=added -fail-on-error=false -token="$GITHUB_TOKEN"

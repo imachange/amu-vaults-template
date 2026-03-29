@@ -1,0 +1,5 @@
+[tools]
+gitleaks = "latest"
+lefthook = "latest"
+node = "latest"
+pnpm = "latest"
