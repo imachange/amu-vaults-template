@@ -1,0 +1,10 @@
+[tools]
+ gitleaks = "latest"
+ lefthook = "latest"
+ node = "latest"
+ pnpm = "latest"
+
+[tasks]
+ pre-commit = "gitleaks detect --source . --config .config/gitleaks.toml --staged --verbose"
+ pre-push = "gitleaks detect --source . --config .config/gitleaks.toml --staged --verbose"
+ full-scan = "gitleaks detect --source . --config .config/gitleaks.toml --verbose"

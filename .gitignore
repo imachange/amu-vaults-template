@@ -7,7 +7,7 @@
 !.gitattributes
 
 !*.json
-
+!.config/*.toml
 
 # IgnoreList
 .obsidian*/workspace*.json

@@ -1,0 +1,29 @@
+# gitleaks config for common secrets; tweak allowlist/exclusions as needed
+title = "amu-vaults-template gitleaks rules"
+[paths]
+  # scan everything in repository
+  denylist = [".*"]
+
+[[rules]]
+  id = "generic-api-key"
+  description = "Generic API Key"
+  regex = "(?i)(api_key|apikey|secret|token|password).*?=[\\s]*[\\\"\\']?([A-Za-z0-9_\\-]{20,})"
+  tags = ["key", "secret"]
+
+[[rules]]
+  id = "aws-access-key"
+  description = "AWS Access Key"
+  regex = "AKIA[0-9A-Z]{16}"
+  tags = ["aws", "key"]
+
+[[rules]]
+  id = "aws-secret-key"
+  description = "AWS Secret Key"
+  regex = "(?i)aws(.{0,20})?(secret|private)(.{0,20})?key"
+  tags = ["aws", "secret"]
+
+[[rules]]
+  id = "google-api-key"
+  description = "Google API Key"
+  regex = "AIza[0-9A-Za-z-_]{35}"
+  tags = ["gcp", "key"]

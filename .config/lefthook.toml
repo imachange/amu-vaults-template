@@ -1,0 +1,8 @@
+[hooks]
+  [hooks.pre-commit]
+  command = "mise run pre-commit"
+  run_in_parallel = false
+
+  [hooks.pre-push]
+  command = "mise run pre-push"
+  run_in_parallel = false
