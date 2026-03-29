@@ -10,12 +10,6 @@ run = "mise run pre-commit"
 [pre-push.commands.mise]
 run = "mise run pre-push"
 
-# prepare-commit-msg: interactive commitizen prompt to help compose messages
-[prepare-commit-msg]
-
-[prepare-commit-msg.commands.cz]
-run = 'sh -lc "cd _amu && exec < /dev/tty && pnpm exec cz --hook {1}"'
-
 # commit-msg: コミットメッセージ検証（commitlint のカスタムルールで issue の有無を検証）
 [commit-msg]
 

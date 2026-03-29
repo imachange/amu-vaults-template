@@ -16,7 +16,9 @@
 ## 主要ファイル（このディレクトリ内）
 - [.config/lefthook.toml](.config/lefthook.toml#L1) — Git フック設定（`pre-commit` / `pre-push` / `commit-msg`）
 - [.config/mise/config.toml](.config/mise/config.toml#L1) — `mise` によるタスク定義（ローカルタスクランナー）
-- [.config/mise/tasks/](.config/mise/tasks/) — タスク用スクリプト群（`pre-commit` 等）
+ - [.config/mise/tasks/](.config/mise/tasks/) — タスク用スクリプト群（`pre-commit` 等）
+ - [.config/mise/tasks/cz](.config/mise/tasks/cz) — commitizen 用の `mise` タスク（対話的コミットを起動）
+ - [.config/.czrc](.config/.czrc) — commitizen (cz) の設定（`_amu` 内の adapter を指す）
 - [.config/commitlint.config.js](.config/commitlint.config.js#L1) — `commitlint` のルール設定（日本語メッセージ + カスタムルール）
 - [.config/gitleaks.toml](.config/gitleaks.toml#L1) — gitleaks のスキャン設定
 
@@ -26,6 +28,7 @@
   - `pre-push`: プッシュ前の統合的な検査（簡易 CI 相当）
   - `full-scan`: リポジトリ全体のセキュリティスキャン等を実行 (gitleaks など)
   - `reviewdog`: 静的解析結果を PR に投稿するラッパー
+  - `cz`: 対話的コミットヘルパー（commitizen）。`mise run cz` で起動します。`prepare-commit-msg` フックは `mise run cz {1}` を呼ぶよう設定されています（フック実行時は端末 stdin が接続されます）。
 
 ## Mise の file-tasks について
 - 現在、`mise` のタスクは `.config/mise/tasks/` にファイルとして配置されています。ファイル名がタスク名になり、拡張子は不要です。
@@ -59,6 +62,7 @@
 
 ## .config の構成
 - **Lefthook**: Git フックの設定。フック定義は [.config/lefthook.toml](.config/lefthook.toml#L1) にあります。`pre-commit` / `pre-push` / `commit-msg` の各フックをここで定義しています。
+  - 補足: `prepare-commit-msg` は `mise run cz {1}` を呼び、対話的な commitizen を起動するよう設定しています（`.config/.czrc` を参照）。
 - **Mise**: リポジトリ内のタスクランナーです。`lefthook` から `mise run <task>` で呼び出されます。設定は [.config/mise/config.toml](.config/mise/config.toml#L1) にあり、主要タスク（`pre-commit` / `pre-push` / `commit-msg` など）が定義されています。
 - **commitlint**: コミットメッセージ検証ツール。設定は [.config/commitlint.config.js](.config/commitlint.config.js#L1) にあります。実行は `_amu` パッケージ経由で `pnpm --prefix _amu exec commitlint` を使います。
 - **_amu**: 開発依存をまとめたサブパッケージ（`_amu/package.json`）。`commitlint` 等はここに入っています。
@@ -75,6 +79,11 @@
 - **commitlint (コミットメッセージ検証)**:
   - 直接実行: `pnpm --prefix _amu exec commitlint --config ../.config/commitlint.config.js --edit .git/COMMIT_EDITMSG`
   - 設定ファイル: [.config/commitlint.config.js](.config/commitlint.config.js#L1)
+
+- **commitizen (cz)**:
+  - 対話的起動 (ローカル): `mise run cz`
+  - `_amu` 側の依存をインストールするには: `pnpm --prefix _amu install`
+  - 備考: `prepare-commit-msg` フックは `mise run cz {1}` を呼び、通常の `git commit` 実行時に対話プロンプトが起動します。手動で起動する場合は `mise run cz` を使用してください。
 
 ## トラブルシューティング / デバッグ
 - `lefthook validate` で設定エラーが出た場合はエラーメッセージを確認し、`.config/lefthook.toml` の構文（TOML）を修正してください。

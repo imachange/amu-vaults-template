@@ -16,6 +16,9 @@ if [ -z "$cz_path" ]; then
   exit 2
 fi
 
+# attach stdin to the terminal so interactive prompts work inside git hooks
+exec < /dev/tty
+
 if [ $# -gt 0 ]; then
   exec node "$cz_path" --hook "$1"
 else

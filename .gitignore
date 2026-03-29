@@ -14,7 +14,8 @@
 !*.json
 !*.toml
 !*.yaml
-!*.config/mise/tasks/*
+!.config/mise/tasks/*
+!.config/.czrc
 
 # IgnoreList
 .obsidian*/workspace*.json
